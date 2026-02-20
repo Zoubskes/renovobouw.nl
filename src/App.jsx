@@ -1,0 +1,775 @@
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button.jsx'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card.jsx'
+import { Input } from '@/components/ui/input.jsx'
+import { Label } from '@/components/ui/label.jsx'
+import { Textarea } from '@/components/ui/textarea.jsx'
+import { Checkbox } from '@/components/ui/checkbox.jsx'
+import { Badge } from '@/components/ui/badge.jsx'
+import { 
+  Home, 
+  Sun, 
+  Thermometer, 
+  Battery, 
+  Settings, 
+  HelpCircle,
+  CheckCircle,
+  Star,
+  Shield,
+  TrendingUp,
+  Users,
+  Phone,
+  Mail,
+  MapPin,
+  ArrowRight,
+  Euro
+} from 'lucide-react'
+import heroHouse from './assets/hero-house-new.jpg'
+import { useIsMobile } from './hooks/use-mobile.js'
+import './App.css'
+
+function App() {
+  const isMobile = useIsMobile()
+
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    postalCode: '',
+    phone: '',
+    email: '',
+    energyCosts: '',
+    selectedOptions: []
+  })
+
+  const [isVisible, setIsVisible] = useState({})
+  const [currentStep, setCurrentStep] = useState(0)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsVisible(prev => ({ ...prev, [entry.target.id]: true }))
+          }
+        })
+      },
+      { threshold: 0.1 }
+    )
+
+    const elements = document.querySelectorAll('[data-animate]')
+    elements.forEach((el) => observer.observe(el))
+
+    return () => observer.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStep((prev) => (prev + 1) % 5)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const sustainabilityOptions = [
+    { 
+      id: 'isolatie', 
+      label: 'Isolatie (kozijnen & glas)', 
+      icon: Home, 
+      description: 'Bespaar tot 30% op je energierekening',
+      color: 'blue',
+      savings: '€50-150/maand'
+    },
+    { 
+      id: 'zonnepanelen', 
+      label: 'Zonnepanelen', 
+      icon: Sun, 
+      description: 'Wek je eigen groene stroom op',
+      color: 'orange',
+      savings: '€80-200/maand'
+    },
+    { 
+      id: 'warmtepomp', 
+      label: 'Warmtepomp', 
+      icon: Thermometer, 
+      description: 'Duurzaam verwarmen en koelen',
+      color: 'purple',
+      savings: '€100-250/maand'
+    },
+    { 
+      id: 'thuisbatterij', 
+      label: 'Thuisbatterij', 
+      icon: Battery, 
+      description: 'Sla je eigen energie op',
+      color: 'teal',
+      savings: '€30-80/maand'
+    },
+    { 
+      id: 'ems', 
+      label: 'EMS systeem', 
+      icon: Settings, 
+      description: 'Slim energiebeheer voor je huis',
+      color: 'pink',
+      savings: '€20-60/maand'
+    },
+    { 
+      id: 'advies', 
+      label: 'Ik weet het nog niet – ik wil advies', 
+      icon: HelpCircle, 
+      description: 'Onze experts helpen je verder',
+      color: 'indigo',
+      savings: 'Op maat'
+    }
+  ]
+
+  const steps = [
+    { number: 1, title: 'Vul je gegevens en wensen in', description: 'Kies welke verduurzaming bij jou past', duration: '2 min' },
+    { number: 2, title: 'Gratis huischeck', description: 'Een expert komt vrijblijvend bij je langs', duration: '1 uur' },
+    { number: 3, title: 'Persoonlijke offerte', description: 'Ontvang een complete offerte op maat', duration: '2 dagen' },
+    { number: 4, title: 'Samen rondmaken van de lening', description: 'Wij begeleiden je bij de aanvraag', duration: '1 week' },
+    { number: 5, title: 'Direct starten met verduurzamen', description: 'Na goedkeuring plannen we de werkzaamheden', duration: '2 weken' }
+  ]
+
+  const benefits = [
+    { 
+      icon: TrendingUp, 
+      title: 'Direct lagere energierekening', 
+      description: 'Bespaar vanaf dag één op je maandelijkse kosten',
+      highlight: 'Tot €300/maand besparing'
+    },
+    { 
+      icon: Home, 
+      title: 'Waardestijging van je woning', 
+      description: 'Een duurzame woning is meer waard',
+      highlight: '10-15% waardestijging'
+    },
+    { 
+      icon: CheckCircle, 
+      title: 'Geen hoge kosten vooraf', 
+      description: 'Financiering geregeld zonder eigen inleg',
+      highlight: '100% financiering mogelijk'
+    },
+    { 
+      icon: Shield, 
+      title: 'Alles geregeld van A tot Z', 
+      description: 'Van subsidiecheck tot installatie',
+      highlight: 'Eén aanspreekpunt'
+    }
+  ]
+
+  const testimonials = [
+    { 
+      name: 'Familie van der Berg', 
+      location: 'Utrecht', 
+      rating: 5, 
+      text: 'Dankzij het Nationaal Duurzaam Collectief besparen we nu €150 per maand op onze energierekening. De begeleiding was uitstekend!',
+      savings: '€150/maand',
+      image: '👨‍👩‍👧‍👦'
+    },
+    { 
+      name: 'Jan en Marie Jansen', 
+      location: 'Amsterdam', 
+      rating: 5, 
+      text: 'Binnen 3 maanden hadden we zonnepanelen en een warmtepomp. Alles werd perfect geregeld, van financiering tot installatie.',
+      savings: '€200/maand',
+      image: '👫'
+    },
+    { 
+      name: 'Peter de Vries', 
+      location: 'Rotterdam', 
+      rating: 5, 
+      text: 'Eindelijk een partij die echt alles uit handen neemt. Onze woning is nu energieneutraal en we betalen minder dan voorheen.',
+      savings: '€180/maand',
+      image: '👨'
+    }
+  ]
+
+  const handleOptionChange = (optionId) => {
+    setFormData(prev => ({
+      ...prev,
+      selectedOptions: prev.selectedOptions.includes(optionId)
+        ? prev.selectedOptions.filter(id => id !== optionId)
+        : [...prev.selectedOptions, optionId]
+    }))
+  }
+
+  const handleInputChange = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    // Hier zou de form submission logica komen
+    console.log('Form submitted:', formData)
+    
+    // Animate success
+    const button = e.target.querySelector('button[type="submit"]')
+    button.innerHTML = '✓ Aanvraag verzonden!'
+    button.classList.add('bg-green-700')
+    
+    setTimeout(() => {
+      alert('Bedankt voor je aanvraag! We nemen binnen 24 uur contact met je op.')
+    }, 500)
+  }
+
+  const scrollToForm = () => {
+    document.getElementById('form-section').scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const getColorClasses = (color) => {
+    const colors = {
+      blue: 'border-blue-500 bg-blue-50 text-blue-700',
+      orange: 'border-orange-500 bg-orange-50 text-orange-700',
+      purple: 'border-purple-500 bg-purple-50 text-purple-700',
+      teal: 'border-teal-500 bg-teal-50 text-teal-700',
+      pink: 'border-pink-500 bg-pink-50 text-pink-700',
+      indigo: 'border-indigo-500 bg-indigo-50 text-indigo-700'
+    }
+    return colors[color] || 'border-gray-500 bg-gray-50 text-gray-700'
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-green-50 to-blue-50 overflow-hidden min-h-screen flex items-center">
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105 transition-transform duration-20000 ease-out"
+          style={{
+            backgroundImage: `url(${heroHouse})`,
+            ...(isMobile ? { backgroundPosition: '30% calc(50% - -10px)' } : {})
+          }}
+        ></div>
+        <div className="relative z-10 container mx-auto px-4 py-20">
+          <div className="max-w-4xl mx-auto text-center text-white">
+            <div className="animate-fade-in-up">
+              <h1
+                className="text-4xl lg:text-6xl font-bold mb-6 leading-tight"
+                style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}
+              >
+                Meer licht. Meer comfort. Minder energieverlies.
+              </h1>
+              <p className="text-xl lg:text-2xl mb-8 opacity-100" style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}>
+                Ontvang binnen 2 minuten een vrijblijvende kozijnen offerte.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button 
+                  size="lg" 
+                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 lg:px-12 lg:py-7 text-lg lg:text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  onClick={scrollToForm}
+                >
+                  Start de aanvraag
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
+                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                <div className="flex items-center gap-2 text-sm lg:text-base opacity-100">
+                  <CheckCircle className="w-4 h-4" />
+
+                  <span>100% gratis en vrijblijvend</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        {/* Floating stats */}
+        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden lg:flex gap-8 text-white">
+          <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="text-2xl font-bold">15.000+</div>
+            <div className="text-sm opacity-80">Tevreden klanten</div>
+          </div>
+          <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="text-2xl font-bold">Tot 30%</div>
+            <div className="text-sm opacity-80">minder warmteverlies</div>
+          </div>
+          <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="text-2xl font-bold">98%</div>
+            <div className="text-sm opacity-80">Goedkeuringspercentage</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Elements */}
+      <section className="py-8 bg-white border-b">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-600">
+            <div className="flex items-center gap-2 hover:text-green-600 transition-colors">
+              <Shield className="w-5 h-5 text-green-600" />
+              <span>Vakkundige montage door eigen specialisten</span>
+            </div>
+            <div className="flex items-center gap-2 hover:text-green-600 transition-colors">
+              <CheckCircle className="w-5 h-5 text-green-600" />
+              <span>100% onafhankelijk advies</span>
+            </div>
+            <div className="flex items-center gap-2 hover:text-green-600 transition-colors">
+              <Star className="w-5 h-5 text-green-600" />
+              <span>Hoogwaardige materialen met lange levensduur</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Form Section */}
+      <section id="form-section" className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto">
+            <div 
+              className={`text-center mb-12 transition-all duration-1000 ${
+                isVisible['form-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+              data-animate
+              id="form-section"
+            >
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Klaar voor nieuwe kozijnen?
+              </h2>
+              <p className="text-lg text-gray-600">
+                Vul je gegevens in en ontdek wat nieuwe kozijnen voor jou kunnen betekenen.
+              </p>
+            </div>
+
+            <Card className="shadow-xl border-0 overflow-hidden">
+              <CardContent className="p-8">
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  {/* Sustainability Options */}
+                  <div>
+                    <Label className="text-lg font-semibold mb-6 block">Kies je verduurzamingsopties:</Label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {sustainabilityOptions.map((option, index) => {
+                        const IconComponent = option.icon
+                        const isSelected = formData.selectedOptions.includes(option.id)
+                        return (
+                          <div
+                            key={option.id}
+                            className={`p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 ${
+                              isSelected
+                                ? `${getColorClasses(option.color)} shadow-md scale-105`
+                                : 'border-gray-200 hover:border-green-300 bg-white'
+                            }`}
+                            onClick={() => handleOptionChange(option.id)}
+                            style={{ animationDelay: `${index * 100}ms` }}
+                          >
+                            <div className="flex items-start gap-3">
+                              <Checkbox
+                                checked={isSelected}
+                                onChange={() => handleOptionChange(option.id)}
+                                className="mt-1"
+                              />
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <IconComponent className={`w-5 h-5 ${isSelected ? '' : 'text-green-600'}`} />
+                                  <span className="font-medium">{option.label}</span>
+                                </div>
+                                <p className="text-sm opacity-80 mb-2">{option.description}</p>
+                                <div className="flex items-center gap-1 text-xs font-medium">
+                                  <Euro className="w-3 h-3" />
+                                  <span>{option.savings}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Personal Information */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name" className="text-sm font-medium">Naam *</Label>
+                      <Input
+                        id="name"
+                        value={formData.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        placeholder="Voor- en achternaam"
+                        required
+                        className="transition-all duration-300 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone" className="text-sm font-medium">Telefoonnummer *</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
+                        placeholder="06-12345678"
+                        required
+                        className="transition-all duration-300 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="address" className="text-sm font-medium">Adres *</Label>
+                      <Input
+                        id="address"
+                        value={formData.address}
+                        onChange={(e) => handleInputChange('address', e.target.value)}
+                        placeholder="Straat en huisnummer"
+                        required
+                        className="transition-all duration-300 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="postalCode" className="text-sm font-medium">Postcode *</Label>
+                      <Input
+                        id="postalCode"
+                        value={formData.postalCode}
+                        onChange={(e) => handleInputChange('postalCode', e.target.value)}
+                        placeholder="1234 AB"
+                        required
+                        className="transition-all duration-300 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
+                    <div className="md:col-span-2 space-y-2">
+                      <Label htmlFor="email" className="text-sm font-medium">E-mailadres *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        placeholder="naam@email.nl"
+                        required
+                        className="transition-all duration-300 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
+                    <div className="md:col-span-2 space-y-2">
+                      <Label htmlFor="energyCosts" className="text-sm font-medium">Huidige energiekosten per maand (optioneel)</Label>
+                      <Input
+                        id="energyCosts"
+                        value={formData.energyCosts}
+                        onChange={(e) => handleInputChange('energyCosts', e.target.value)}
+                        placeholder="€ 200"
+                        className="transition-all duration-300 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      />
+                    </div>
+                  </div>
+
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  >
+                    Ontvang mijn bespaarplan
+                    <ArrowRight className="ml-2 w-5 h-5" />
+                  </Button>
+                  
+                  <p className="text-xs text-gray-500 text-center">
+                    Door het versturen van dit formulier ga je akkoord met onze privacy voorwaarden
+                  </p>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Steps Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div 
+              className={`text-center mb-12 transition-all duration-1000 ${
+                isVisible['steps-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+              data-animate
+              id="steps-section"
+            >
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Zo werkt het
+              </h2>
+              <p className="text-lg text-gray-600">
+                Van aanvraag tot installatie in 5 eenvoudige stappen
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
+              {steps.map((step, index) => (
+                <div 
+                  key={step.number} 
+                  className={`text-center transition-all duration-700 ${
+                    currentStep === index ? 'transform scale-110' : ''
+                  }`}
+                  style={{ animationDelay: `${index * 200}ms` }}
+                >
+                  <div className="relative mb-6">
+                    {/* Animated step circle */}
+                    <div className={`relative w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 transition-all duration-700 ${
+                      currentStep === index 
+                        ? 'bg-green-600 text-white shadow-lg scale-110 animate-pulse-green' 
+                        : currentStep > index
+                        ? 'bg-green-600 text-white shadow-md'
+                        : 'bg-green-100 text-green-600'
+                    }`}>
+                      {currentStep > index ? (
+                        <CheckCircle className="w-8 h-8 animate-bounce-in" />
+                      ) : (
+                        <span className={currentStep === index ? 'animate-bounce' : ''}>{step.number}</span>
+                      )}
+                      
+                      {/* Pulsing ring for active step */}
+                      {currentStep === index && (
+                        <div className="absolute inset-0 rounded-full border-4 border-green-400 animate-ping opacity-75"></div>
+                      )}
+                    </div>
+                    
+                    {/* Animated progress line */}
+                    {index < steps.length - 1 && (
+                      <div className="hidden md:block absolute top-8 left-full w-full h-1 bg-green-200 -translate-y-0.5 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-1000 ease-out rounded-full"
+                          style={{ 
+                            width: currentStep > index ? '100%' : currentStep === index ? '50%' : '0%',
+                            boxShadow: currentStep >= index ? '0 0 10px rgba(34, 197, 94, 0.5)' : 'none'
+                          }}
+                        ></div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Step content with fade animation */}
+                  <div className={`transition-all duration-500 ${
+                    currentStep === index ? 'opacity-100 transform translate-y-0' : 'opacity-80'
+                  }`}>
+                    <h3 className={`font-semibold text-lg mb-2 transition-colors duration-300 ${
+                      currentStep === index ? 'text-green-600' : 'text-gray-900'
+                    }`}>
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-600 text-sm mb-2">{step.description}</p>
+                    <Badge 
+                      variant={currentStep === index ? "default" : "outline"} 
+                      className={`text-xs transition-all duration-300 ${
+                        currentStep === index 
+                          ? 'bg-green-600 text-white shadow-md' 
+                          : 'border-green-200 text-green-600'
+                      }`}
+                    >
+                      {step.duration}
+                    </Badge>
+                  </div>
+                  
+                  {/* Floating icon animation for active step */}
+                  {currentStep === index && (
+                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
+                      <span className="text-xs">✨</span>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            
+            {/* Progress indicator */}
+            <div className="mt-12 max-w-md mx-auto">
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-sm text-gray-600">Voortgang</span>
+                <span className="text-sm font-medium text-green-600">
+                  Stap {currentStep + 1} van {steps.length}
+                </span>
+              </div>
+              <div className="w-full bg-green-100 rounded-full h-2 overflow-hidden">
+                <div 
+                  className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-1000 ease-out"
+                  style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+            
+            {/* Auto-play controls */}
+            <div className="text-center mt-8">
+              <div className="flex justify-center items-center gap-2">
+                {steps.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentStep(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                      currentStep === index 
+                        ? 'bg-green-600 scale-125' 
+                        : 'bg-green-200 hover:bg-green-300'
+                    }`}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Klik op de punten om een specifieke stap te bekijken
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-16 bg-green-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div 
+              className={`text-center mb-12 transition-all duration-1000 ${
+                isVisible['benefits-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+              data-animate
+              id="benefits-section"
+            >
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Waarom kiezen voor ons?
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {benefits.map((benefit, index) => {
+                const IconComponent = benefit.icon
+                return (
+                  <Card 
+                    key={index} 
+                    className="text-center p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 bg-white"
+                    style={{ animationDelay: `${index * 150}ms` }}
+                  >
+                    <CardContent className="p-0">
+                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 transition-all duration-300 group-hover:bg-green-600">
+                        <IconComponent className="w-8 h-8 text-green-600 group-hover:text-white" />
+                      </div>
+                      <h3 className="font-semibold text-lg mb-2">{benefit.title}</h3>
+                      <p className="text-gray-600 text-sm mb-3">{benefit.description}</p>
+                      <Badge className="bg-green-100 text-green-700 hover:bg-green-200">
+                        {benefit.highlight}
+                      </Badge>
+                    </CardContent>
+                  </Card>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div 
+              className={`text-center mb-12 transition-all duration-1000 ${
+                isVisible['testimonials-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+              }`}
+              data-animate
+              id="testimonials-section"
+            >
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Wat onze klanten zeggen
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {testimonials.map((testimonial, index) => (
+                <Card 
+                  key={index} 
+                  className="p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0"
+                  style={{ animationDelay: `${index * 200}ms` }}
+                >
+                  <CardContent className="p-0">
+                    <div className="flex items-center gap-1 mb-4">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                    <p className="text-gray-700 mb-4 italic">"{testimonial.text}"</p>
+                    <div className="flex items-center justify-between">
+                      <div className="text-sm">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-2xl">{testimonial.image}</span>
+                          <div>
+                            <p className="font-semibold">{testimonial.name}</p>
+                            <p className="text-gray-600">{testimonial.location}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <Badge className="bg-green-100 text-green-700">
+                        {testimonial.savings}
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 bg-gradient-to-r from-green-600 to-blue-600 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+            Klaar om te starten?
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            Doe nu de gratis check en ontvang binnen 24 uur je persoonlijke bespaarplan
+          </p>
+          <Button 
+            size="lg" 
+            className="bg-white text-green-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            onClick={scrollToForm}
+          >
+            Start nu je aanvraag
+            <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <h3 className="text-xl font-bold mb-4">Nationaal Duurzaam Collectief</h3>
+                <p className="text-gray-300 mb-4">
+                  Samen maken we Nederland duurzamer. Wij regelen alles van A tot Z voor jouw woningverduurzaming.
+                </p>
+                <div className="flex gap-4">
+                  <Badge variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900">
+                    <Shield className="w-4 h-4 mr-1" />
+                    Erkend
+                  </Badge>
+                  <Badge variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900">
+                    <CheckCircle className="w-4 h-4 mr-1" />
+                    Betrouwbaar
+                  </Badge>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold mb-4">Contact</h4>
+                <div className="space-y-2 text-gray-300">
+                  <div className="flex items-center gap-2 hover:text-white transition-colors">
+                    <Phone className="w-4 h-4" />
+                    <span>085 - 130 5000</span>
+                  </div>
+                  <div className="flex items-center gap-2 hover:text-white transition-colors">
+                    <Mail className="w-4 h-4" />
+                    <span>info@nationaalduurzaamcollectief.nl</span>
+                  </div>
+                  <div className="flex items-center gap-2 hover:text-white transition-colors">
+                    <MapPin className="w-4 h-4" />
+                    <span>Heel Nederland</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="font-semibold mb-4">Informatie</h4>
+                <div className="space-y-2 text-gray-300">
+                  <a href="#" className="block hover:text-white transition-colors">Privacy & Voorwaarden</a>
+                  <a href="#" className="block hover:text-white transition-colors">Over ons</a>
+                  <a href="#" className="block hover:text-white transition-colors">Veelgestelde vragen</a>
+                  <a href="#" className="block hover:text-white transition-colors">Blog</a>
+                </div>
+              </div>
+            </div>
+            
+            <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+              <p>&copy; 2024 Nationaal Duurzaam Collectief. Alle rechten voorbehouden.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  )
+}
+
+export default App
