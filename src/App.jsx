@@ -387,16 +387,6 @@ function App() {
                         className="transition-all duration-300 focus:ring-2 focus:ring-green-500 focus:border-green-500"
                       />
                     </div>
-                    <div className="md:col-span-2 space-y-2">
-                      <Label htmlFor="energyCosts" className="text-sm font-medium">Huidige energiekosten per maand (optioneel)</Label>
-                      <Input
-                        id="energyCosts"
-                        value={formData.energyCosts}
-                        onChange={(e) => handleInputChange('energyCosts', e.target.value)}
-                        placeholder="€ 200"
-                        className="transition-all duration-300 focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                      />
-                    </div>
                   </div>
 
                   <Button 
@@ -404,7 +394,7 @@ function App() {
                     size="lg" 
                     className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                   >
-                    Ontvang mijn bespaarplan
+                    Start mijn aanvraag
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                   
