@@ -121,37 +121,37 @@ function App() {
   ]
 
   const steps = [
-    { number: 1, title: 'Vul je gegevens en wensen in', description: 'Kies welke verduurzaming bij jou past', duration: '2 min' },
-    { number: 2, title: 'Gratis huischeck', description: 'Een expert komt vrijblijvend bij je langs', duration: '1 uur' },
+    { number: 1, title: 'Vul je gegevens en wensen in', description: 'Geef aan welke kozijnen je zoekt en laat je gegevens achter', duration: '2 min' },
+    { number: 2, title: 'Gratis advies aan huis', description: 'Een expert komt vrijblijvend bij je langs', duration: '1 uur' },
     { number: 3, title: 'Persoonlijke offerte', description: 'Ontvang een complete offerte op maat', duration: '2 dagen' },
-    { number: 4, title: 'Samen rondmaken van de lening', description: 'Wij begeleiden je bij de aanvraag', duration: '1 week' },
-    { number: 5, title: 'Direct starten met verduurzamen', description: 'Na goedkeuring plannen we de werkzaamheden', duration: '2 weken' }
+    { number: 4, title: 'Akkoord & planning', description: 'Na jouw goedkeuring plannen we de montage in op een geschikt moment', duration: 'binnen 1 week' },
+    { number: 5, title: 'Vakkundige plaatsing', description: 'Onze monteurs installeren de kozijnen netjes en professioneel', duration: '1-2 dagen' }
   ]
 
   const benefits = [
     { 
       icon: TrendingUp, 
-      title: 'Direct lagere energierekening', 
-      description: 'Bespaar vanaf dag één op je maandelijkse kosten',
-      highlight: 'Tot €300/maand besparing'
+      title: 'Verhoog de waarde van je woning', 
+      description: 'Nieuwe kozijnen zorgen voor een moderne uitstraling én betere energielabel',
+      highlight: 'Meer woningwaarde'
     },
     { 
       icon: Home, 
-      title: 'Waardestijging van je woning', 
-      description: 'Een duurzame woning is meer waard',
-      highlight: '10-15% waardestijging'
+      title: 'Bespaar op energiekosten', 
+      description: 'Goed geïsoleerde kozijnen verlagen je energieverbruik',
+      highlight: 'Lagere maandlasten'
     },
     { 
       icon: CheckCircle, 
-      title: 'Geen hoge kosten vooraf', 
-      description: 'Financiering geregeld zonder eigen inleg',
-      highlight: '100% financiering mogelijk'
+      title: 'Direct meer comfort in huis', 
+      description: 'Minder tocht en betere isolatie vanaf dag één',
+      highlight: 'Tot 30% minder warmteverlies'
     },
     { 
       icon: Shield, 
-      title: 'Alles geregeld van A tot Z', 
-      description: 'Van subsidiecheck tot installatie',
-      highlight: 'Eén aanspreekpunt'
+      title: 'Onderhoudsarm & duurzaam', 
+      description: 'Kunststof en aluminium kozijnen gaan jarenlang mee',
+      highlight: '20+ jaar levensduur'
     }
   ]
 
@@ -160,24 +160,21 @@ function App() {
       name: 'Familie van der Berg', 
       location: 'Utrecht', 
       rating: 5, 
-      text: 'Dankzij het Nationaal Duurzaam Collectief besparen we nu €150 per maand op onze energierekening. De begeleiding was uitstekend!',
-      savings: '€150/maand',
+      text: 'Onze woning voelt direct warmer en stiller. De nieuwe kozijnen maken echt een wereld van verschil.',
       image: '👨‍👩‍👧‍👦'
     },
     { 
       name: 'Jan en Marie Jansen', 
       location: 'Amsterdam', 
       rating: 5, 
-      text: 'Binnen 3 maanden hadden we zonnepanelen en een warmtepomp. Alles werd perfect geregeld, van financiering tot installatie.',
-      savings: '€200/maand',
+      text: 'Van advies tot plaatsing perfect geregeld. Alles werd netjes afgewerkt en de monteurs werkten zeer professioneel. 3 maanden hadden we zonnepanelen en een warmtepomp. Alles werd perfect geregeld, van financiering tot installatie.',
       image: '👫'
     },
     { 
       name: 'Peter de Vries', 
       location: 'Rotterdam', 
       rating: 5, 
-      text: 'Eindelijk een partij die echt alles uit handen neemt. Onze woning is nu energieneutraal en we betalen minder dan voorheen.',
-      savings: '€180/maand',
+      text: 'De uitstraling van ons huis is compleet vernieuwd. We hadden dit veel eerder moeten doen. een partij die echt alles uit handen neemt. Onze woning is nu energieneutraal en we betalen minder dan voorheen.',
       image: '👨'
     }
   ]
@@ -330,47 +327,6 @@ function App() {
             <Card className="shadow-xl border-0 overflow-hidden">
               <CardContent className="p-8">
                 <form onSubmit={handleSubmit} className="space-y-8">
-                  {/* Sustainability Options */}
-                  <div>
-                    <Label className="text-lg font-semibold mb-6 block">Kies je verduurzamingsopties:</Label>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {sustainabilityOptions.map((option, index) => {
-                        const IconComponent = option.icon
-                        const isSelected = formData.selectedOptions.includes(option.id)
-                        return (
-                          <div
-                            key={option.id}
-                            className={`p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1 ${
-                              isSelected
-                                ? `${getColorClasses(option.color)} shadow-md scale-105`
-                                : 'border-gray-200 hover:border-green-300 bg-white'
-                            }`}
-                            onClick={() => handleOptionChange(option.id)}
-                            style={{ animationDelay: `${index * 100}ms` }}
-                          >
-                            <div className="flex items-start gap-3">
-                              <Checkbox
-                                checked={isSelected}
-                                onChange={() => handleOptionChange(option.id)}
-                                className="mt-1"
-                              />
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2 mb-2">
-                                  <IconComponent className={`w-5 h-5 ${isSelected ? '' : 'text-green-600'}`} />
-                                  <span className="font-medium">{option.label}</span>
-                                </div>
-                                <p className="text-sm opacity-80 mb-2">{option.description}</p>
-                                <div className="flex items-center gap-1 text-xs font-medium">
-                                  <Euro className="w-3 h-3" />
-                                  <span>{option.savings}</span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
 
                   {/* Personal Information */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -698,7 +654,7 @@ function App() {
             Klaar om te starten?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Doe nu de gratis check en ontvang binnen 24 uur je persoonlijke bespaarplan
+            Vraag vandaag nog een vrijblijvende offerte aan en ontvang binnen 24 uur een voorstel op maat.
           </p>
           <Button 
             size="lg" 
@@ -717,9 +673,9 @@ function App() {
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <h3 className="text-xl font-bold mb-4">Nationaal Duurzaam Collectief</h3>
+                <h3 className="text-xl font-bold mb-4">Renovobouw</h3>
                 <p className="text-gray-300 mb-4">
-                  Samen maken we Nederland duurzamer. Wij regelen alles van A tot Z voor jouw woningverduurzaming.
+                  Maak je huis klaar voor de toekomst met nieuwe kozijnen. Wij begeleiden je van begin tot eind.
                 </p>
                 <div className="flex gap-4">
                   <Badge variant="outline" className="text-white border-white hover:bg-white hover:text-gray-900">
@@ -742,7 +698,7 @@ function App() {
                   </div>
                   <div className="flex items-center gap-2 hover:text-white transition-colors">
                     <Mail className="w-4 h-4" />
-                    <span>info@nationaalduurzaamcollectief.nl</span>
+                    <span>info@renovobouw.nl</span>
                   </div>
                   <div className="flex items-center gap-2 hover:text-white transition-colors">
                     <MapPin className="w-4 h-4" />
@@ -763,7 +719,7 @@ function App() {
             </div>
             
             <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-              <p>&copy; 2024 Nationaal Duurzaam Collectief. Alle rechten voorbehouden.</p>
+              <p>&copy; 2026 Renovobouw. Alle rechten voorbehouden.</p>
             </div>
           </div>
         </div>
