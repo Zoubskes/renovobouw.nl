@@ -306,7 +306,7 @@ function App() {
       </section>
 
       {/* Form Section */}
-      <section id="form-section" className="py-16 bg-gray-50">
+      <section id="form-section" className="pt-12 pb-10 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div 
@@ -408,139 +408,100 @@ function App() {
         </div>
       </section>
 
-      {/* Steps Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div 
-              className={`text-center mb-12 transition-all duration-1000 ${
-                isVisible['steps-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
-              data-animate
-              id="steps-section"
-            >
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Zo werkt het
-              </h2>
-              <p className="text-lg text-gray-600">
-                Van aanvraag tot installatie in 5 eenvoudige stappen
-              </p>
-            </div>
+{/* Steps Section (Auto Fade – No Click, No Buttons) */}
+<section className="pt-0 pb-24 bg-white" id="steps-section">
+  <div className="container mx-auto px-4">
+    <div className="max-w-4xl mx-auto text-center">
 
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
-              {steps.map((step, index) => (
-                <div 
-                  key={step.number} 
-                  className={`text-center transition-all duration-700 ${
-                    currentStep === index ? 'transform scale-110' : ''
-                  }`}
-                  style={{ animationDelay: `${index * 200}ms` }}
-                >
-                  <div className="relative mb-6">
-                    {/* Animated step circle */}
-                    <div className={`relative w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 transition-all duration-700 ${
-                      currentStep === index 
-                        ? 'bg-green-600 text-white shadow-lg scale-110 animate-pulse-green' 
-                        : currentStep > index
-                        ? 'bg-green-600 text-white shadow-md'
-                        : 'bg-green-100 text-green-600'
-                    }`}>
-                      {currentStep > index ? (
-                        <CheckCircle className="w-8 h-8 animate-bounce-in" />
-                      ) : (
-                        <span className={currentStep === index ? 'animate-bounce' : ''}>{step.number}</span>
-                      )}
-                      
-                      {/* Pulsing ring for active step */}
-                      {currentStep === index && (
-                        <div className="absolute inset-0 rounded-full border-4 border-green-400 animate-ping opacity-75"></div>
-                      )}
-                    </div>
-                    
-                    {/* Animated progress line */}
-                    {index < steps.length - 1 && (
-                      <div className="hidden md:block absolute top-8 left-full w-full h-1 bg-green-200 -translate-y-0.5 rounded-full overflow-hidden">
-                        <div 
-                          className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-1000 ease-out rounded-full"
-                          style={{ 
-                            width: currentStep > index ? '100%' : currentStep === index ? '50%' : '0%',
-                            boxShadow: currentStep >= index ? '0 0 10px rgba(34, 197, 94, 0.5)' : 'none'
-                          }}
-                        ></div>
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Step content with fade animation */}
-                  <div className={`transition-all duration-500 ${
-                    currentStep === index ? 'opacity-100 transform translate-y-0' : 'opacity-80'
-                  }`}>
-                    <h3 className={`font-semibold text-lg mb-2 transition-colors duration-300 ${
-                      currentStep === index ? 'text-green-600' : 'text-gray-900'
-                    }`}>
-                      {step.title}
-                    </h3>
-                    <p className="text-gray-600 text-sm mb-2">{step.description}</p>
-                    <Badge 
-                      variant={currentStep === index ? "default" : "outline"} 
-                      className={`text-xs transition-all duration-300 ${
-                        currentStep === index 
-                          ? 'bg-green-600 text-white shadow-md' 
-                          : 'border-green-200 text-green-600'
-                      }`}
-                    >
-                      {step.duration}
-                    </Badge>
-                  </div>
-                  
-                  {/* Floating icon animation for active step */}
-                  {currentStep === index && (
-                    <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center animate-bounce">
-                      <span className="text-xs">✨</span>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-            
-            {/* Progress indicator */}
-            <div className="mt-12 max-w-md mx-auto">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-gray-600">Voortgang</span>
-                <span className="text-sm font-medium text-green-600">
-                  Stap {currentStep + 1} van {steps.length}
-                </span>
-              </div>
-              <div className="w-full bg-green-100 rounded-full h-2 overflow-hidden">
-                <div 
-                  className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-1000 ease-out"
-                  style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
-                ></div>
-              </div>
-            </div>
-            
-            {/* Auto-play controls */}
-            <div className="text-center mt-8">
-              <div className="flex justify-center items-center gap-2">
-                {steps.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentStep(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      currentStep === index 
-                        ? 'bg-green-600 scale-125' 
-                        : 'bg-green-200 hover:bg-green-300'
-                    }`}
-                  />
-                ))}
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                Klik op de punten om een specifieke stap te bekijken
-              </p>
-            </div>
+      {/* Header */}
+      <div
+        className={`mb-12 transition-all duration-700 ${
+          isVisible["steps-section"]
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 translate-y-8"
+        }`}
+      >
+        <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+          Zo werkt het
+        </h2>
+        <p className="text-lg text-gray-600">
+          In 5 eenvoudige stappen naar nieuwe kozijnen
+        </p>
+      </div>
+
+      {/* Animated Card */}
+      <div className="relative rounded-3xl border border-gray-100 bg-white shadow-sm p-10 overflow-hidden">
+
+        {/* Soft top progress bar */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100">
+          <div
+            className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-[3500ms] ease-linear"
+            style={{
+              width: `${((currentStep + 1) / steps.length) * 100}%`,
+            }}
+          />
+        </div>
+
+        {/* Animated Content */}
+        <div
+          key={currentStep}
+          className="transition-all duration-500 ease-out animate-[fadeIn_500ms_ease]"
+        >
+          {/* Step Number */}
+          <div className="mb-6">
+            <span className="text-sm uppercase tracking-widest text-green-600 font-semibold">
+              Stap {steps[currentStep].number}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
+            {steps[currentStep].title}
+          </h3>
+
+          {/* Description */}
+          <p className="text-gray-600 text-lg mb-6">
+            {steps[currentStep].description}
+          </p>
+
+          {/* Duration */}
+          <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-green-50 text-green-700 text-sm font-medium">
+            {steps[currentStep].duration}
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* Minimal Step Indicators */}
+      <div className="flex justify-center gap-2 mt-8">
+        {steps.map((_, index) => (
+          <div
+            key={index}
+            className={`h-2 rounded-full transition-all duration-500 ${
+              currentStep === index
+                ? "w-8 bg-green-600"
+                : "w-2 bg-gray-300"
+            }`}
+          />
+        ))}
+      </div>
+
+    </div>
+  </div>
+
+  {/* Local Animation */}
+  <style jsx>{`
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `}</style>
+</section>
 
       {/* Benefits Section */}
       <section className="py-16 bg-green-50">
