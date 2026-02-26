@@ -198,6 +198,11 @@ function App() {
     e.preventDefault()
     // Hier zou de form submission logica komen
     console.log('Form submitted:', formData)
+
+    // META PIXEL LEAD EVENT
+  if (window.fbq) {
+    window.fbq('track', 'Lead')
+  }
     
     // Animate success
     const button = e.target.querySelector('button[type="submit"]')
