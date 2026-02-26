@@ -248,7 +248,7 @@ function App() {
   {/* Logo - middle top */}
   <a
     href="/"
-    className="absolute top-8 left-1/2 -translate-x-1/2 z-20"
+    className="absolute top-26 left-1/2 -translate-x-1/2 z-20"
     aria-label="Home"
   >
 <img
