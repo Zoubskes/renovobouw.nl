@@ -6,6 +6,8 @@ import { Label } from '@/components/ui/label.jsx'
 import { Textarea } from '@/components/ui/textarea.jsx'
 import { Checkbox } from '@/components/ui/checkbox.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
+import logo from './assets/logo.png'
+
 import { 
   Home, 
   Sun, 
@@ -225,65 +227,92 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-green-50 to-blue-50 overflow-hidden min-h-screen flex items-center">
-        <div className="absolute inset-0 bg-black/30"></div>
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105 transition-transform duration-20000 ease-out"
-          style={{
-            backgroundImage: `url(${heroHouse})`,
-            ...(isMobile ? { backgroundPosition: '30% calc(50% - -10px)' } : {})
-          }}
-        ></div>
-        <div className="relative z-10 container mx-auto px-4 py-20">
-          <div className="max-w-4xl mx-auto text-center text-white">
-            <div className="animate-fade-in-up">
-              <h1
-                className="text-4xl lg:text-6xl font-bold mb-6 leading-tight"
-                style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}
-              >
-                Meer licht. Meer comfort. Minder energieverlies.
-              </h1>
-              <p className="text-xl lg:text-2xl mb-8 opacity-100" style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}>
-                Ontvang binnen 2 minuten een vrijblijvende kozijnen offerte.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button 
-                  size="lg" 
-                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 lg:px-12 lg:py-7 text-lg lg:text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                  onClick={scrollToForm}
-                >
-                  Start de aanvraag
-                  <ArrowRight className="ml-2 w-5 h-5" />
-                </Button>
-                    <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4">
-                <div className="flex items-center gap-2 text-sm lg:text-base opacity-100">
-                  <CheckCircle className="w-4 h-4" />
+{/* HEADER */}
 
-                  <span>100% gratis en vrijblijvend</span>
-                  </div>
-                </div>
-              </div>
+
+
+{/* Hero Section */}
+<section className="relative bg-gradient-to-br from-green-50 to-blue-50 overflow-hidden min-h-screen flex items-center">
+  {/* Background image (first) */}
+  <div
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105 transition-transform duration-20000 ease-out z-0"
+    style={{
+      backgroundImage: `url(${heroHouse})`,
+      ...(isMobile ? { backgroundPosition: '30% calc(50% - -10px)' } : {})
+    }}
+  />
+
+  {/* Dim overlay (now actually works) */}
+  <div className="absolute inset-0 bg-black/30 z-10" />
+
+  {/* Logo - middle top */}
+  <a
+    href="/"
+    className="absolute top-8 left-1/2 -translate-x-1/2 z-20"
+    aria-label="Home"
+  >
+<img
+  src={logo}
+  alt="Renovobouw"
+  className="h-20 md:h-28 w-auto 
+             drop-shadow-[0_0_25px_rgba(255,255,255,0.9)]"
+/>
+  </a>
+
+  {/* Content */}
+  <div className="relative z-20 container mx-auto px-4 py-20">
+    <div className="max-w-4xl mx-auto text-center text-white">
+      <div className="animate-fade-in-up">
+        <h1
+          className="text-4xl lg:text-6xl font-bold mb-6 leading-tight"
+          style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}
+        >
+          Meer licht. Meer comfort. Minder energieverlies.
+        </h1>
+        <p
+          className="text-xl lg:text-2xl mb-8 opacity-100"
+          style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}
+        >
+          Ontvang binnen 2 minuten een vrijblijvende kozijnen offerte.
+        </p>
+
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <Button
+            size="lg"
+            className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 lg:px-12 lg:py-7 text-lg lg:text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            onClick={scrollToForm}
+          >
+            Start de aanvraag
+            <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
+
+          <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4">
+            <div className="flex items-center gap-2 text-sm lg:text-base opacity-100">
+              <CheckCircle className="w-4 h-4" />
+              <span>100% gratis en vrijblijvend</span>
             </div>
           </div>
         </div>
-        
-        {/* Floating stats */}
-        <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 hidden lg:flex gap-8 text-white">
-          <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
-            <div className="text-2xl font-bold">15.000+</div>
-            <div className="text-sm opacity-80">Tevreden klanten</div>
-          </div>
-          <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
-            <div className="text-2xl font-bold">Tot 30%</div>
-            <div className="text-sm opacity-80">minder warmteverlies</div>
-          </div>
-          <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
-            <div className="text-2xl font-bold">98%</div>
-            <div className="text-sm opacity-80">Goedkeuringspercentage</div>
-          </div>
-        </div>
-      </section>
+      </div>
+    </div>
+  </div>
+
+  {/* Floating stats */}
+  <div className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex gap-8 text-white z-20">
+    <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
+      <div className="text-2xl font-bold">15.000+</div>
+      <div className="text-sm opacity-80">Tevreden klanten</div>
+    </div>
+    <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
+      <div className="text-2xl font-bold">Tot 30%</div>
+      <div className="text-sm opacity-80">minder warmteverlies</div>
+    </div>
+    <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
+      <div className="text-2xl font-bold">98%</div>
+      <div className="text-sm opacity-80">Goedkeuringspercentage</div>
+    </div>
+  </div>
+</section>
 
       {/* Trust Elements */}
       <section className="py-8 bg-white border-b">
@@ -443,32 +472,34 @@ function App() {
         </div>
 
         {/* Animated Content */}
-        <div
-          key={currentStep}
-          className="transition-all duration-500 ease-out animate-[fadeIn_500ms_ease]"
-        >
-          {/* Step Number */}
-          <div className="mb-6">
-            <span className="text-sm uppercase tracking-widest text-green-600 font-semibold">
-              Stap {steps[currentStep].number}
-            </span>
-          </div>
+<div className="relative min-h-[260px] sm:min-h-[240px]">
+  <div
+    key={currentStep}
+    className="transition-all duration-500 ease-out animate-[fadeIn_500ms_ease]"
+  >
+    {/* Step Number */}
+    <div className="mb-6">
+      <span className="text-sm uppercase tracking-widest text-green-600 font-semibold">
+        Stap {steps[currentStep].number}
+      </span>
+    </div>
 
-          {/* Title */}
-          <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
-            {steps[currentStep].title}
-          </h3>
+    {/* Title */}
+    <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
+      {steps[currentStep].title}
+    </h3>
 
-          {/* Description */}
-          <p className="text-gray-600 text-lg mb-6">
-            {steps[currentStep].description}
-          </p>
+    {/* Description */}
+    <p className="text-gray-600 text-lg mb-6">
+      {steps[currentStep].description}
+    </p>
 
-          {/* Duration */}
-          <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-green-50 text-green-700 text-sm font-medium">
-            {steps[currentStep].duration}
-          </div>
-        </div>
+    {/* Duration */}
+    <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-green-50 text-green-700 text-sm font-medium">
+      {steps[currentStep].duration}
+    </div>
+  </div>
+</div>
       </div>
 
       {/* Minimal Step Indicators */}
