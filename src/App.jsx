@@ -166,14 +166,14 @@ function App() {
       image: '👨‍👩‍👧‍👦'
     },
     { 
-      name: 'Jan en Marie Jansen', 
+      name: 'Jan en Marie van den Broek', 
       location: 'Amsterdam', 
       rating: 5, 
       text: 'Van advies tot plaatsing perfect geregeld. Alles werd netjes afgewerkt en de monteurs werkten zeer professioneel. 3 maanden hadden we zonnepanelen en een warmtepomp. Alles werd perfect geregeld, van financiering tot installatie.',
       image: '👫'
     },
     { 
-      name: 'Peter de Vries', 
+      name: 'Mik Janssen', 
       location: 'Rotterdam', 
       rating: 5, 
       text: 'De uitstraling van ons huis is compleet vernieuwd. We hadden dit veel eerder moeten doen. een partij die echt alles uit handen neemt. Onze woning is nu energieneutraal en we betalen minder dan voorheen.',
