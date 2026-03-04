@@ -7,13 +7,14 @@ import { Textarea } from '@/components/ui/textarea.jsx'
 import { Checkbox } from '@/components/ui/checkbox.jsx'
 import { Badge } from '@/components/ui/badge.jsx'
 import logo from './assets/logo.png'
+import emailjs from '@emailjs/browser'
 
-import { 
-  Home, 
-  Sun, 
-  Thermometer, 
-  Battery, 
-  Settings, 
+import {
+  Home,
+  Sun,
+  Thermometer,
+  Battery,
+  Settings,
   HelpCircle,
   CheckCircle,
   Star,
@@ -45,6 +46,8 @@ function App() {
 
   const [isVisible, setIsVisible] = useState({})
   const [currentStep, setCurrentStep] = useState(0)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState('idle') // 'idle' | 'success' | 'error'
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -72,50 +75,50 @@ function App() {
   }, [])
 
   const sustainabilityOptions = [
-    { 
-      id: 'isolatie', 
-      label: 'Isolatie (kozijnen & glas)', 
-      icon: Home, 
+    {
+      id: 'isolatie',
+      label: 'Isolatie (kozijnen & glas)',
+      icon: Home,
       description: 'Bespaar tot 30% op je energierekening',
       color: 'blue',
       savings: '€50-150/maand'
     },
-    { 
-      id: 'zonnepanelen', 
-      label: 'Zonnepanelen', 
-      icon: Sun, 
+    {
+      id: 'zonnepanelen',
+      label: 'Zonnepanelen',
+      icon: Sun,
       description: 'Wek je eigen groene stroom op',
       color: 'orange',
       savings: '€80-200/maand'
     },
-    { 
-      id: 'warmtepomp', 
-      label: 'Warmtepomp', 
-      icon: Thermometer, 
+    {
+      id: 'warmtepomp',
+      label: 'Warmtepomp',
+      icon: Thermometer,
       description: 'Duurzaam verwarmen en koelen',
       color: 'purple',
       savings: '€100-250/maand'
     },
-    { 
-      id: 'thuisbatterij', 
-      label: 'Thuisbatterij', 
-      icon: Battery, 
+    {
+      id: 'thuisbatterij',
+      label: 'Thuisbatterij',
+      icon: Battery,
       description: 'Sla je eigen energie op',
       color: 'teal',
       savings: '€30-80/maand'
     },
-    { 
-      id: 'ems', 
-      label: 'EMS systeem', 
-      icon: Settings, 
+    {
+      id: 'ems',
+      label: 'EMS systeem',
+      icon: Settings,
       description: 'Slim energiebeheer voor je huis',
       color: 'pink',
       savings: '€20-60/maand'
     },
-    { 
-      id: 'advies', 
-      label: 'Ik weet het nog niet – ik wil advies', 
-      icon: HelpCircle, 
+    {
+      id: 'advies',
+      label: 'Ik weet het nog niet – ik wil advies',
+      icon: HelpCircle,
       description: 'Onze experts helpen je verder',
       color: 'indigo',
       savings: 'Op maat'
@@ -131,51 +134,51 @@ function App() {
   ]
 
   const benefits = [
-    { 
-      icon: TrendingUp, 
-      title: 'Verhoog de waarde van je woning', 
+    {
+      icon: TrendingUp,
+      title: 'Verhoog de waarde van je woning',
       description: 'Nieuwe kozijnen zorgen voor een moderne uitstraling én betere energielabel',
       highlight: 'Meer woningwaarde'
     },
-    { 
-      icon: Home, 
-      title: 'Bespaar op energiekosten', 
+    {
+      icon: Home,
+      title: 'Bespaar op energiekosten',
       description: 'Goed geïsoleerde kozijnen verlagen je energieverbruik',
       highlight: 'Lagere maandlasten'
     },
-    { 
-      icon: CheckCircle, 
-      title: 'Direct meer comfort in huis', 
+    {
+      icon: CheckCircle,
+      title: 'Direct meer comfort in huis',
       description: 'Minder tocht en betere isolatie vanaf dag één',
       highlight: 'Tot 30% minder warmteverlies'
     },
-    { 
-      icon: Shield, 
-      title: 'Onderhoudsarm & duurzaam', 
+    {
+      icon: Shield,
+      title: 'Onderhoudsarm & duurzaam',
       description: 'Kunststof en aluminium kozijnen gaan jarenlang mee',
       highlight: '20+ jaar levensduur'
     }
   ]
 
   const testimonials = [
-    { 
-      name: 'Familie van der Berg', 
-      location: 'Utrecht', 
-      rating: 5, 
+    {
+      name: 'Familie van der Berg',
+      location: 'Utrecht',
+      rating: 5,
       text: 'Onze woning voelt direct warmer en stiller. De nieuwe kozijnen maken echt een wereld van verschil.',
       image: '👨‍👩‍👧‍👦'
     },
-    { 
-      name: 'Jan en Marie van den Broek', 
-      location: 'Amsterdam', 
-      rating: 5, 
+    {
+      name: 'Jan en Marie van den Broek',
+      location: 'Amsterdam',
+      rating: 5,
       text: 'Van advies tot plaatsing perfect geregeld. Alles werd netjes afgewerkt en de monteurs werkten zeer professioneel. 3 maanden hadden we zonnepanelen en een warmtepomp. Alles werd perfect geregeld, van financiering tot installatie.',
       image: '👫'
     },
-    { 
-      name: 'Mik Janssen', 
-      location: 'Rotterdam', 
-      rating: 5, 
+    {
+      name: 'Mik Janssen',
+      location: 'Rotterdam',
+      rating: 5,
       text: 'De uitstraling van ons huis is compleet vernieuwd. We hadden dit veel eerder moeten doen. een partij die echt alles uit handen neemt. Onze woning is nu energieneutraal en we betalen minder dan voorheen.',
       image: '👨'
     }
@@ -194,24 +197,66 @@ function App() {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Hier zou de form submission logica komen
-    console.log('Form submitted:', formData)
+    if (isSubmitting) return
 
-    // META PIXEL LEAD EVENT
-  if (window.fbq) {
-    window.fbq('track', 'Lead')
-  }
-    
-    // Animate success
-    const button = e.target.querySelector('button[type="submit"]')
-    button.innerHTML = '✓ Aanvraag verzonden!'
-    button.classList.add('bg-green-700')
-    
-    setTimeout(() => {
-      alert('Bedankt voor je aanvraag! We nemen binnen 24 uur contact met je op.')
-    }, 500)
+    setIsSubmitting(true)
+    setSubmitStatus('idle')
+
+    const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID
+    const TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID
+    const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+
+    try {
+      if (!SERVICE_ID || !TEMPLATE_ID || !PUBLIC_KEY) {
+        throw new Error('EmailJS env vars ontbreken (SERVICE_ID / TEMPLATE_ID / PUBLIC_KEY).')
+      }
+
+      const templateParams = {
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        postalCode: formData.postalCode,
+        selectedOptions: (formData.selectedOptions || []).join(', '),
+        energyCosts: formData.energyCosts || '',
+        page_url: window.location.href,
+        submitted_at: new Date().toISOString(),
+      }
+
+      await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, {
+        publicKey: PUBLIC_KEY,
+      })
+
+      // META PIXEL LEAD EVENT
+      if (window.fbq) {
+        window.fbq('track', 'Lead')
+      }
+
+      setSubmitStatus('success')
+
+      // reset form
+      setFormData({
+        name: '',
+        address: '',
+        postalCode: '',
+        phone: '',
+        email: '',
+        energyCosts: '',
+        selectedOptions: []
+      })
+
+      setTimeout(() => {
+        alert('Bedankt voor je aanvraag! We nemen binnen 24 uur contact met je op.')
+      }, 300)
+    } catch (err) {
+      console.error('EmailJS error:', err)
+      setSubmitStatus('error')
+      alert('Oeps, verzenden is mislukt. Probeer het opnieuw of neem contact op.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const scrollToForm = () => {
@@ -232,92 +277,92 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white">
-{/* HEADER */}
+      {/* HEADER */}
 
 
 
-{/* Hero Section */}
-<section className="relative bg-gradient-to-br from-green-50 to-blue-50 overflow-hidden min-h-screen flex items-center">
-  {/* Background image (first) */}
-  <div
-    className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105 transition-transform duration-20000 ease-out z-0"
-    style={{
-      backgroundImage: `url(${heroHouse})`,
-      ...(isMobile ? { backgroundPosition: '30% calc(50% - -10px)' } : {})
-    }}
-  />
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-green-50 to-blue-50 overflow-hidden min-h-screen flex items-center">
+        {/* Background image (first) */}
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transform scale-105 transition-transform duration-20000 ease-out z-0"
+          style={{
+            backgroundImage: `url(${heroHouse})`,
+            ...(isMobile ? { backgroundPosition: '30% calc(50% - -10px)' } : {})
+          }}
+        />
 
-  {/* Dim overlay (now actually works) */}
-  <div className="absolute inset-0 bg-black/30 z-10" />
+        {/* Dim overlay (now actually works) */}
+        <div className="absolute inset-0 bg-black/30 z-10" />
 
-  {/* Logo - middle top */}
-  <a
-    href="/"
-    className="absolute top-26 left-1/2 -translate-x-1/2 z-20"
-    aria-label="Home"
-  >
-<img
-  src={logo}
-  alt="Renovobouw"
-  className="h-20 md:h-28 w-auto 
+        {/* Logo - middle top */}
+        <a
+          href="/"
+          className="absolute top-26 left-1/2 -translate-x-1/2 z-20"
+          aria-label="Home"
+        >
+          <img
+            src={logo}
+            alt="Renovobouw"
+            className="h-20 md:h-28 w-auto 
              drop-shadow-[0_0_25px_rgba(255,255,255,0.9)]"
-/>
-  </a>
+          />
+        </a>
 
-  {/* Content */}
-  <div className="relative z-20 container mx-auto px-4 py-20">
-    <div className="max-w-4xl mx-auto text-center text-white">
-      <div className="animate-fade-in-up">
-        <h1
-          className="text-4xl lg:text-6xl font-bold mb-6 leading-tight"
-          style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}
-        >
-          Meer licht. Meer comfort. Minder energieverlies.
-        </h1>
-        <p
-          className="text-xl lg:text-2xl mb-8 opacity-100"
-          style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}
-        >
-          Ontvang binnen 2 minuten een vrijblijvende kozijnen offerte.
-        </p>
+        {/* Content */}
+        <div className="relative z-20 container mx-auto px-4 py-20">
+          <div className="max-w-4xl mx-auto text-center text-white">
+            <div className="animate-fade-in-up">
+              <h1
+                className="text-4xl lg:text-6xl font-bold mb-6 leading-tight"
+                style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}
+              >
+                Meer licht. Meer comfort. Minder energieverlies.
+              </h1>
+              <p
+                className="text-xl lg:text-2xl mb-8 opacity-100"
+                style={{ textShadow: '0 0 10px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6)' }}
+              >
+                Ontvang binnen 2 minuten een vrijblijvende kozijnen offerte.
+              </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button
-            size="lg"
-            className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 lg:px-12 lg:py-7 text-lg lg:text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            onClick={scrollToForm}
-          >
-            Start de aanvraag
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button
+                  size="lg"
+                  className="bg-green-600 hover:bg-green-700 text-white px-8 py-4 lg:px-12 lg:py-7 text-lg lg:text-xl font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  onClick={scrollToForm}
+                >
+                  Start de aanvraag
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Button>
 
-          <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4">
-            <div className="flex items-center gap-2 text-sm lg:text-base opacity-100">
-              <CheckCircle className="w-4 h-4" />
-              <span>100% gratis en vrijblijvend</span>
+                <div className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4">
+                  <div className="flex items-center gap-2 text-sm lg:text-base opacity-100">
+                    <CheckCircle className="w-4 h-4" />
+                    <span>100% gratis en vrijblijvend</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
 
-  {/* Floating stats */}
-  <div className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex gap-8 text-white z-20">
-    <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
-      <div className="text-2xl font-bold">15.000+</div>
-      <div className="text-sm opacity-80">Tevreden klanten</div>
-    </div>
-    <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
-      <div className="text-2xl font-bold">Tot 30%</div>
-      <div className="text-sm opacity-80">minder warmteverlies</div>
-    </div>
-    <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
-      <div className="text-2xl font-bold">98%</div>
-      <div className="text-sm opacity-80">Goedkeuringspercentage</div>
-    </div>
-  </div>
-</section>
+        {/* Floating stats */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 hidden lg:flex gap-8 text-white z-20">
+          <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="text-2xl font-bold">15.000+</div>
+            <div className="text-sm opacity-80">Tevreden klanten</div>
+          </div>
+          <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="text-2xl font-bold">Tot 30%</div>
+            <div className="text-sm opacity-80">minder warmteverlies</div>
+          </div>
+          <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4">
+            <div className="text-2xl font-bold">98%</div>
+            <div className="text-sm opacity-80">Goedkeuringspercentage</div>
+          </div>
+        </div>
+      </section>
 
       {/* Trust Elements */}
       <section className="py-8 bg-white border-b">
@@ -343,10 +388,9 @@ function App() {
       <section id="form-section" className="pt-12 pb-10 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <div 
-              className={`text-center mb-12 transition-all duration-1000 ${
-                isVisible['form-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+            <div
+              className={`text-center mb-12 transition-all duration-1000 ${isVisible['form-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
               data-animate
               id="form-section"
             >
@@ -423,15 +467,21 @@ function App() {
                     </div>
                   </div>
 
-                  <Button 
-                    type="submit" 
-                    size="lg" 
-                    className="w-full bg-green-600 hover:bg-green-700 text-white py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                  <Button
+                    type="submit"
+                    size="lg"
+                    disabled={isSubmitting || submitStatus === 'success'}
+                    className={`w-full text-white py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 ${submitStatus === 'success' ? 'bg-green-700 hover:bg-green-700' : 'bg-green-600 hover:bg-green-700'
+                      }`}
                   >
-                    Start mijn aanvraag
+                    {submitStatus === 'success'
+                      ? '✓ Aanvraag verzonden!'
+                      : isSubmitting
+                        ? 'Verzenden...'
+                        : 'Start mijn aanvraag'}
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
-                  
+
                   <p className="text-xs text-gray-500 text-center">
                     Door het versturen van dit formulier ga je akkoord met onze privacy voorwaarden
                   </p>
@@ -442,90 +492,88 @@ function App() {
         </div>
       </section>
 
-{/* Steps Section (Auto Fade – No Click, No Buttons) */}
-<section className="pt-0 pb-24 bg-white" id="steps-section">
-  <div className="container mx-auto px-4">
-    <div className="max-w-4xl mx-auto text-center">
+      {/* Steps Section (Auto Fade – No Click, No Buttons) */}
+      <section className="pt-0 pb-24 bg-white" id="steps-section">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center">
 
-      {/* Header */}
-      <div
-        className={`mb-12 transition-all duration-700 ${
-          isVisible["steps-section"]
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 translate-y-8"
-        }`}
-      >
-        <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
-          Zo werkt het
-        </h2>
-        <p className="text-lg text-gray-600">
-          In 5 eenvoudige stappen naar nieuwe kozijnen
-        </p>
-      </div>
+            {/* Header */}
+            <div
+              className={`mb-12 transition-all duration-700 ${isVisible["steps-section"]
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
+                }`}
+            >
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-3">
+                Zo werkt het
+              </h2>
+              <p className="text-lg text-gray-600">
+                In 5 eenvoudige stappen naar nieuwe kozijnen
+              </p>
+            </div>
 
-      {/* Animated Card */}
-      <div className="relative rounded-3xl border border-gray-100 bg-white shadow-sm p-10 overflow-hidden">
+            {/* Animated Card */}
+            <div className="relative rounded-3xl border border-gray-100 bg-white shadow-sm p-10 overflow-hidden">
 
-        {/* Soft top progress bar */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100">
-          <div
-            className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-[3500ms] ease-linear"
-            style={{
-              width: `${((currentStep + 1) / steps.length) * 100}%`,
-            }}
-          />
+              {/* Soft top progress bar */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gray-100">
+                <div
+                  className="h-full bg-gradient-to-r from-green-500 to-green-600 transition-all duration-[3500ms] ease-linear"
+                  style={{
+                    width: `${((currentStep + 1) / steps.length) * 100}%`,
+                  }}
+                />
+              </div>
+
+              {/* Animated Content */}
+              <div className="relative min-h-[260px] sm:min-h-[240px]">
+                <div
+                  key={currentStep}
+                  className="transition-all duration-500 ease-out animate-[fadeIn_500ms_ease]"
+                >
+                  {/* Step Number */}
+                  <div className="mb-6">
+                    <span className="text-sm uppercase tracking-widest text-green-600 font-semibold">
+                      Stap {steps[currentStep].number}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
+                    {steps[currentStep].title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-gray-600 text-lg mb-6">
+                    {steps[currentStep].description}
+                  </p>
+
+                  {/* Duration */}
+                  <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-green-50 text-green-700 text-sm font-medium">
+                    {steps[currentStep].duration}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Minimal Step Indicators */}
+            <div className="flex justify-center gap-2 mt-8">
+              {steps.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-2 rounded-full transition-all duration-500 ${currentStep === index
+                    ? "w-8 bg-green-600"
+                    : "w-2 bg-gray-300"
+                    }`}
+                />
+              ))}
+            </div>
+
+          </div>
         </div>
 
-        {/* Animated Content */}
-<div className="relative min-h-[260px] sm:min-h-[240px]">
-  <div
-    key={currentStep}
-    className="transition-all duration-500 ease-out animate-[fadeIn_500ms_ease]"
-  >
-    {/* Step Number */}
-    <div className="mb-6">
-      <span className="text-sm uppercase tracking-widest text-green-600 font-semibold">
-        Stap {steps[currentStep].number}
-      </span>
-    </div>
-
-    {/* Title */}
-    <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
-      {steps[currentStep].title}
-    </h3>
-
-    {/* Description */}
-    <p className="text-gray-600 text-lg mb-6">
-      {steps[currentStep].description}
-    </p>
-
-    {/* Duration */}
-    <div className="inline-flex items-center justify-center px-4 py-2 rounded-full bg-green-50 text-green-700 text-sm font-medium">
-      {steps[currentStep].duration}
-    </div>
-  </div>
-</div>
-      </div>
-
-      {/* Minimal Step Indicators */}
-      <div className="flex justify-center gap-2 mt-8">
-        {steps.map((_, index) => (
-          <div
-            key={index}
-            className={`h-2 rounded-full transition-all duration-500 ${
-              currentStep === index
-                ? "w-8 bg-green-600"
-                : "w-2 bg-gray-300"
-            }`}
-          />
-        ))}
-      </div>
-
-    </div>
-  </div>
-
-  {/* Local Animation */}
-  <style jsx>{`
+        {/* Local Animation */}
+        <style jsx>{`
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -537,16 +585,15 @@ function App() {
       }
     }
   `}</style>
-</section>
+      </section>
 
       {/* Benefits Section */}
       <section className="py-16 bg-green-50">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <div 
-              className={`text-center mb-12 transition-all duration-1000 ${
-                isVisible['benefits-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+            <div
+              className={`text-center mb-12 transition-all duration-1000 ${isVisible['benefits-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
               data-animate
               id="benefits-section"
             >
@@ -559,8 +606,8 @@ function App() {
               {benefits.map((benefit, index) => {
                 const IconComponent = benefit.icon
                 return (
-                  <Card 
-                    key={index} 
+                  <Card
+                    key={index}
                     className="text-center p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0 bg-white"
                     style={{ animationDelay: `${index * 150}ms` }}
                   >
@@ -586,10 +633,9 @@ function App() {
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
-            <div 
-              className={`text-center mb-12 transition-all duration-1000 ${
-                isVisible['testimonials-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-              }`}
+            <div
+              className={`text-center mb-12 transition-all duration-1000 ${isVisible['testimonials-section'] ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+                }`}
               data-animate
               id="testimonials-section"
             >
@@ -600,8 +646,8 @@ function App() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {testimonials.map((testimonial, index) => (
-                <Card 
-                  key={index} 
+                <Card
+                  key={index}
                   className="p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border-0"
                   style={{ animationDelay: `${index * 200}ms` }}
                 >
@@ -643,8 +689,8 @@ function App() {
           <p className="text-xl mb-8 opacity-90">
             Vraag vandaag nog een vrijblijvende offerte aan en ontvang binnen 24 uur een voorstel op maat.
           </p>
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             className="bg-white text-green-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             onClick={scrollToForm}
           >
@@ -675,7 +721,7 @@ function App() {
                   </Badge>
                 </div>
               </div>
-              
+
               <div>
                 <h4 className="font-semibold mb-4">Contact</h4>
                 <div className="space-y-2 text-gray-300">
@@ -693,7 +739,7 @@ function App() {
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <h4 className="font-semibold mb-4">Informatie</h4>
                 <div className="space-y-2 text-gray-300">
@@ -704,7 +750,7 @@ function App() {
                 </div>
               </div>
             </div>
-            
+
             <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
               <p>&copy; 2026 Renovobouw. Alle rechten voorbehouden.</p>
             </div>
